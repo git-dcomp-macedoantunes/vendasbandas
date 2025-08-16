@@ -1,4 +1,5 @@
 package model;
+import java.util.ArrayList;
 
 public abstract class UserModel {
     protected String username;
@@ -64,4 +65,8 @@ public abstract class UserModel {
     //Seller -> Itens que ele tem a venda
     //Client -> Itens que ele quer comprar
     public abstract void addProduct(ProductModel product);
+
+    //Força os clientes a ter como informar suas listas
+    //de venda, e de compra
+    public abstract ArrayList<ProductModel> getProductList();
 }

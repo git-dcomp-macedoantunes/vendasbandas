@@ -8,6 +8,17 @@ public class UserClientModel extends UserModel {
         super(username, password);
     }
 
+    //Compra os itens do carrinho: remove eles do carrinho e retorna o preço.
+    public double buyCart(){
+        double price = 0;
+        for (int i = 0; i < shoppingCart.size(); i++){
+            price += shoppingCart.get(i).getPrice();
+            shoppingCart.get(i);
+        }
+        shoppingCart = new ArrayList<>();
+        return price;
+    }
+
     //Adiciona produto ao carrinho
     @Override
     public void addProduct(ProductModel product) throws NullPointerException, IllegalArgumentException {
@@ -25,18 +36,8 @@ public class UserClientModel extends UserModel {
         }
     }
 
-    //Compra os itens do carrinho: remove eles do carrinho e retorna o preço.
-    public double buyCart(){
-        double price = 0;
-        for (int i = 0; i < shoppingCart.size(); i++){
-            price += shoppingCart.get(i).getPrice();
-            shoppingCart.get(i);
-        }
-        shoppingCart = new ArrayList<>();
-        return price;
-    }
-
-    public ArrayList<ProductModel> getCart(){
+    @Override
+    public ArrayList<ProductModel> getProductList(){
         return shoppingCart;
     }
 }
