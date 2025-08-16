@@ -1,12 +1,11 @@
 package model;
 import java.util.ArrayList;
-
-import strategy.UserStrategy;
+import mediator.LogMediator;
 
 public abstract class UserModel {
     protected String username;
     protected String password;
-    protected UserStrategy strategy;
+    protected LogMediator mediator;
     //Tenta criar um usuario com nome de usuário e senha de acordo com os métodos, e dá uma exceção caso os argumentos
     //sejam inválidos, pra o controller lidar com isso e poder informar ao usuário o problema.
     public UserModel(String username, String password) throws IllegalArgumentException {
@@ -59,15 +58,11 @@ public abstract class UserModel {
             this.password = password;
         }
     }
-
-    //Para implementação da strategy
-    public void addProduct(ProductModel product) throws IllegalArgumentException, NullPointerException{
-        this.strategy.addProduct(this, product);
-    }
-
     public String getUsername(){
         return this.username;
     }
-
+    
+    //Obriga as classes filhas a ter esses metodos
+    public abstract void addProduct(ProductModel product) throws IllegalArgumentException, NullPointerException;
     public abstract ArrayList<ProductModel> getProductList();
 }

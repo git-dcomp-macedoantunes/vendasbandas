@@ -7,8 +7,7 @@ public class ProductModel {
     private String description;
     private UserModel owner;
  
-    //cria um produto, mas não coloca estoque nele, caso tenha algum problema, da uma exceção pro
-    //controller lidar
+    //cria um produto, coloca stock = 0, e deixa o owner para o mediator lidar
     public ProductModel(String name, double price, String description) throws IllegalArgumentException, NullPointerException{
         try {
         setName(name);
@@ -32,12 +31,7 @@ public class ProductModel {
 
     //tenta colocar o dono, caso seja inválido, da uma exceção
     public void setOwner(UserModel owner) throws NullPointerException{
-        if (owner == null || !(owner instanceof UserSellerModel)){
-            throw new NullPointerException("Erro ao adquirir vendedor.");
-        }
-        else{
-            this.owner = owner;
-        }
+        this.owner = owner;
     }
     //Tenta colocar o preço, caso seja inválido, da uma exceção
     private void setPrice(double price) throws IllegalArgumentException{

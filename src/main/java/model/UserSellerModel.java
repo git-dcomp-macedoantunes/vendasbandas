@@ -1,7 +1,6 @@
 package model;
 import java.util.ArrayList;
 
-import strategy.SellerStrategy;
 
 public class UserSellerModel extends UserModel{
     //e guardado todos os itens dessa conta que estão sendo vendidos aqui separadamente
@@ -10,11 +9,15 @@ public class UserSellerModel extends UserModel{
 
     public UserSellerModel (String username, String password) throws IllegalArgumentException {
         super(username, password);
-        this.strategy = new SellerStrategy();
     }
     //adiciona produto à lista de produtos, e faz o produto criado ter esse UserSeller como dono. Só deve ser chamada logo após
     //UserClientModel.buyCart.
-
+    @Override
+    public void addProduct(ProductModel product) throws IllegalArgumentException, NullPointerException{
+        mediator.addProductToList(this, product);
+        mediator.setOwner(this, product);
+    }
+    
     @Override
     public ArrayList<ProductModel> getProductList(){
         return this.sellingItems;
