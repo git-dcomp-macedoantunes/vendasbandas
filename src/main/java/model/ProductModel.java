@@ -22,6 +22,7 @@ public class ProductModel {
         } catch (NullPointerException e){
             throw e;
         }
+        stock = 0;
     }
 
     //tenta colocar a descrição, caso seja invalida, da uma exceção
@@ -58,7 +59,7 @@ public class ProductModel {
         if (name == null){
             throw new IllegalArgumentException("Erro ao receber nome do produto.");
         }
-        else if((!name.trim().isEmpty())){
+        else if((name.trim().isEmpty())){
             throw new IllegalArgumentException("Nome do produto não pode ser vazio.");
         }
         else if ((name.length()) > 30){

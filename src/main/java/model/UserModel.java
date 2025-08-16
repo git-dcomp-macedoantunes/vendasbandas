@@ -23,7 +23,7 @@ public abstract class UserModel {
         if (username == null){
             throw new IllegalArgumentException("Erro ao receber nome de usuário.");
         }
-        else if((!username.trim().isEmpty())){
+        else if((username.trim().isEmpty())){
             throw new IllegalArgumentException("Nome de usuário não pode ser vazio.");
         }
         else if ((username.length()) > 30){
@@ -42,7 +42,7 @@ public abstract class UserModel {
         if (username == null){
             throw new IllegalArgumentException("Erro ao receber senha.");
         }
-        else if((!username.trim().isEmpty())){
+        else if((username.trim().isEmpty())){
             throw new IllegalArgumentException("Senha não pode ser vazia.");
         }
         else if ((username.length()) > 30){
