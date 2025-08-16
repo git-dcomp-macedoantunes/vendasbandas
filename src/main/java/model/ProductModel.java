@@ -5,21 +5,16 @@ public class ProductModel {
     private double price;
     private int stock;
     private String description;
-    private UserSellerModel owner;
+    private UserModel owner;
  
     //cria um produto, mas não coloca estoque nele, caso tenha algum problema, da uma exceção pro
     //controller lidar
-    public ProductModel(String name, double price, UserSellerModel owner, String description) throws IllegalArgumentException, NullPointerException{
+    public ProductModel(String name, double price, String description) throws IllegalArgumentException, NullPointerException{
         try {
         setName(name);
         setPrice(price);
         setDescription(description);
         } catch (IllegalArgumentException e){
-            throw e;
-        }
-        try{
-        setOwner(owner);
-        } catch (NullPointerException e){
             throw e;
         }
         stock = 0;
@@ -36,8 +31,8 @@ public class ProductModel {
     }
 
     //tenta colocar o dono, caso seja inválido, da uma exceção
-    private void setOwner(UserSellerModel owner) throws NullPointerException{
-        if (owner == null){
+    public void setOwner(UserModel owner) throws NullPointerException{
+        if (owner == null || !(owner instanceof UserSellerModel)){
             throw new NullPointerException("Erro ao adquirir vendedor.");
         }
         else{

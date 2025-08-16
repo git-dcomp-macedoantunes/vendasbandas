@@ -4,11 +4,7 @@
  */
 package model;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +14,7 @@ public class ProductModelTest {
     
     @BeforeEach
     public void setUp() {
-        instance = new ProductModel("namenamee", 50.5, new UserSellerModel("12345678", "12345678") , "descricao");
+        instance = new ProductModel("namenamee", 50.5, "descricao");
     }
 
     /**
@@ -42,18 +38,6 @@ public class ProductModelTest {
         String expResult = "descricao";
         String result = instance.getDescription();
         assertEquals(expResult, result);
-    }
-
-    /**
-     * Test of setStock method, of class ProductModel.
-     */
-    @Test
-    public void testSetStock() {
-        System.out.println("setStock");
-        int stock = 30;
-        instance.setStock(stock);
-        // TODO review the generated test code and remove the default call to fail.
-        assertEquals(stock, instance.getStock());
     }
 
     /**

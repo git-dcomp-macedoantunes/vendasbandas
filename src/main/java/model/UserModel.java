@@ -1,9 +1,12 @@
 package model;
 import java.util.ArrayList;
 
+import strategy.UserStrategy;
+
 public abstract class UserModel {
     protected String username;
     protected String password;
+    protected UserStrategy strategy;
     //Tenta criar um usuario com nome de usuário e senha de acordo com os métodos, e dá uma exceção caso os argumentos
     //sejam inválidos, pra o controller lidar com isso e poder informar ao usuário o problema.
     public UserModel(String username, String password) throws IllegalArgumentException {
@@ -57,16 +60,14 @@ public abstract class UserModel {
         }
     }
 
+    //Para implementação da strategy
+    public void addProduct(ProductModel product) throws IllegalArgumentException, NullPointerException{
+        this.strategy.addProduct(this, product);
+    }
+
     public String getUsername(){
         return this.username;
     }
 
-    //Força os clientes a ter como "adicionar produto"
-    //Seller -> Itens que ele tem a venda
-    //Client -> Itens que ele quer comprar
-    public abstract void addProduct(ProductModel product);
-
-    //Força os clientes a ter como informar suas listas
-    //de venda, e de compra
     public abstract ArrayList<ProductModel> getProductList();
 }
