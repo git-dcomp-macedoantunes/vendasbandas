@@ -1,8 +1,14 @@
 package controller;
+import java.util.ArrayList;
+import mediator.LogMediator;
 import model.ProductModel;
-import org.springframework.ui.Model;
+import model.UserSellerModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -14,34 +20,50 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @author Diogo Lima
  */
 @Controller
+@RequestMapping ("/product")
 public class ProductController {
     
-        private final ProductModel service;
-        private String caixaTextNome = "" ;
+        private final LogMediator service;
+        private UserSellerModel vendedor;
+
         
-        public ProductController (ProductModel service) {
-            try{
-            this.service = service;
-            }catch (IllegalArgumentException e){
-                service.setDescription("");
-                System.out.println (e);
-            }catch (NullPointerException e){
-                System.out.println (e);
-            }
+        public ProductController (LogMediator action, UserSellerModel vendedor) {
+            this.service = action;
+            this.vendedor = vendedor;
             
         }
-        
-           @GetMapping("/")
-           public String index(ProductModel model){
-               
-               model.addAtribute("caixaTextNome", caixaTextNome);
-               
-               
+        //Pega todos os produtos do servidor;
+           @GetMapping
+           public ArrayList<ProductModel> getProducts(){
+               return service.getProductList (vendedor); 
+           }
+           
+         //Pega um produto especifico do servidor;
+           @GetMapping 
+           public ProductModel getProductByName(String productName){
+               return service.findProductByName(productName); 
+           }
+           
+           //Deleta um produto especifico do servidor.
+           @PutMapping
+           public boolean deleteProduct (String productName){
+               return service.getProductList(vendedor).remove(service.findProductByName(productName));
+           }
+           
+           //cria um produto novo no servidor
+           @PostMapping
+           public void createProduct(@RequestBody ProductModel product) {
+               service.logProduct(product.getName(), product.getPrice(), vendedor, product.getDescription(), product.getStock());
+           }
+
+           //Ve qual seller foi escolhido
+           public UserSellerModel getSeller (){
+               return this.vendedor;
+           }
+           
+           //Coloca o seller escolhido
+           @PutMapping
+           public void setSeller (UserSellerModel vendedor){
+               this.vendedor = vendedor;
            }
            }
-    
-    
-    
-    
-    
-}
