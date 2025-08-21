@@ -172,7 +172,6 @@ public class JSONArray implements Iterable<Object> {
     public JSONArray(String source) throws JSONException {
         this(source, new JSONParserConfiguration());
     }
-    
     /**
      * Construct a JSONArray from a source JSON text.
      *
