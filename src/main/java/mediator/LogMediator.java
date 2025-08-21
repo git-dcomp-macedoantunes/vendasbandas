@@ -6,7 +6,6 @@ package mediator;
 
 import java.util.ArrayList;
 
-import factory.UserFactory;
 import model.ProductModel;
 import model.UserModel;
 import model.UserSellerModel;
@@ -23,40 +22,18 @@ public class LogMediator implements Mediator{
     public LogMediator(){
         this.data = new DataService(this);
     }
-    
+
     //loga o usuário, dependendo de "mode" ele registra um tipo de usuário diferente
     //esse "mode" deve ser dado pelo controller.
-    // !!!!!!! Util pra controller
     @Override
     public void logUser(String type, String username, String password) throws IllegalArgumentException {
-        UserModel user;
-        try {
-            if (data.getUsers().get(username) != null){
-                throw new IllegalArgumentException("Nome de usuário já existe");
-            }else{
-                user = UserFactory.getUser(username,password,type);
-                user.setMediator(this);
-                data.getUsers().put(username, user);
-                //TODO: data.saveToFile(file, user)
-            }
-        } 
-        catch (IllegalArgumentException e) {
-            throw e;
-        }
+        data.logUser(type, username, password);
     }
 
     //cria um produto, e cadastra ele no arquivo
-    // !!!!!!! Util pra controller
     @Override
     public void logProduct(String name, double price, UserModel owner, String description, int stock) throws IllegalArgumentException, NullPointerException{
-        try {
-            ProductModel product = new ProductModel(name, price, description, stock);
-            data.getProducts().add(product);
-            owner.addProduct(product);
-            //TODO: data.saveToFile(file, product)
-        } catch (IllegalArgumentException | NullPointerException e) {
-            throw e;
-        }
+        data.logProduct(name, price, owner, description, stock);
     }
     
     //Verifica se owner é valido e da set no owner
@@ -91,5 +68,10 @@ public class LogMediator implements Mediator{
             return list.get(i);
         }
         return null;
+    }
+
+    @Override
+    public DataService getDataService(){
+        return data;
     }
 }

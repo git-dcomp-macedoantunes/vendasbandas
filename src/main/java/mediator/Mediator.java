@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import model.ProductModel;
 import model.UserModel;
+import service.DataService;
 public interface Mediator {
     //logue usuarios
     public void logUser(String type, String username, String password) throws IllegalArgumentException;
@@ -21,4 +22,6 @@ public interface Mediator {
     public void addProductToList(UserModel user, String product);
     //encontre o produto com esse nome
     public ProductModel findProductByName(String product);
+    //retorne o DataService
+    public DataService getDataService();
 }
