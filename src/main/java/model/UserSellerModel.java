@@ -14,7 +14,7 @@ public class UserSellerModel extends UserModel{
     //UserClientModel.buyCart.
     @Override
     public void addProduct(ProductModel product) throws IllegalArgumentException, NullPointerException{
-        mediator.addProductToList(this, product);
+        mediator.addProductToList(this, product.getName());
         mediator.setOwner(this, product);
     }
     

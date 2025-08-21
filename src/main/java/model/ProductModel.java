@@ -8,15 +8,15 @@ public class ProductModel {
     private UserModel owner;
  
     //cria um produto, coloca stock = 0, e deixa o owner para o mediator lidar
-    public ProductModel(String name, double price, String description) throws IllegalArgumentException, NullPointerException{
+    public ProductModel(String name, double price, String description, int stock) throws IllegalArgumentException, NullPointerException{
         try {
         setName(name);
         setPrice(price);
         setDescription(description);
+        setStock(stock);
         } catch (IllegalArgumentException e){
             throw e;
         }
-        stock = 0;
     }
 
     //tenta colocar a descrição, caso seja invalida, da uma exceção
@@ -79,7 +79,7 @@ public class ProductModel {
         return this.description;
     }
 
-    public void setStock(int stock) throws IllegalArgumentException{
+    public final void setStock(int stock) throws IllegalArgumentException{
         if (stock < 0){
             throw new IllegalArgumentException("Estoque não deve ser menor que 0.");
         } else{

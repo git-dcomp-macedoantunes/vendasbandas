@@ -5,7 +5,6 @@
 package mediator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import factory.UserFactory;
 import model.ProductModel;
@@ -19,12 +18,8 @@ import service.DataService;
 
 public class LogMediator implements Mediator{
     //é final porq não é pra mudar o endereço dele.
-    private final DataService data;
-    
-    
-    public LogMediator(DataService data){
-        this.data = data;
-    }
+    private final DataService data = new DataService(this);
+
     //loga o usuário, dependendo de "mode" ele registra um tipo de usuário diferente
     //esse "mode" deve ser dado pelo controller.
     // !!!!!!! Util pra controller
@@ -36,6 +31,7 @@ public class LogMediator implements Mediator{
                 throw new IllegalArgumentException("Nome de usuário já existe");
             }else{
                 user = UserFactory.getUser(username,password,type);
+                user.setMediator(this);
                 data.getUsers().put(username, user);
                 //TODO: data.saveToFile(file, user)
             }
@@ -48,9 +44,9 @@ public class LogMediator implements Mediator{
     //cria um produto, e cadastra ele no arquivo
     // !!!!!!! Util pra controller
     @Override
-    public void logProduct(String name, double price, UserModel owner, String description) throws IllegalArgumentException, NullPointerException{
+    public void logProduct(String name, double price, UserModel owner, String description, int stock) throws IllegalArgumentException, NullPointerException{
         try {
-            ProductModel product = new ProductModel(name, price, description);
+            ProductModel product = new ProductModel(name, price, description, stock);
             data.getProducts().add(product);
             owner.addProduct(product);
             //TODO: data.saveToFile(file, product)
@@ -78,9 +74,18 @@ public class LogMediator implements Mediator{
     }
     
     @Override
-    public void addProductToList(UserModel user, ProductModel product){
-        user.getProductList().add(product);
+    public void addProductToList(UserModel user, String product){
+        ProductModel productFound = findProductByName(product);
+        user.addProduct(productFound);
     }
-    
-    
+
+    @Override 
+    public ProductModel findProductByName(String product){
+        ArrayList<ProductModel> list = data.getProducts();
+        for(int i = 0; i < list.size() ; i++){
+            if(list.get(i).getName().equals(product))
+            return list.get(i);
+        }
+        return null;
+    }
 }

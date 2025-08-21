@@ -1,5 +1,6 @@
 package model;
 import java.util.ArrayList;
+
 import mediator.LogMediator;
 
 public abstract class UserModel {
@@ -40,6 +41,11 @@ public abstract class UserModel {
         }
     }
     
+    //seta o mediator
+    public void setMediator(LogMediator mediator){
+        this.mediator = mediator;
+    }
+
     //Verifica se a senha é válida, caso não seja, lança uma exceção
     private void setPassword(String password) throws IllegalArgumentException {
         if (username == null){

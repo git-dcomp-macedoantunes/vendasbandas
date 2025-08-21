@@ -25,7 +25,7 @@ public class UserClientModel extends UserModel {
             if (product.getStock() == 0){
                 throw new IllegalArgumentException("Produto deve ter estoque maior que 0.");
             }
-            mediator.addProductToList(this, product);
+            mediator.addProductToList(this, product.getName());
         }
         catch(NullPointerException e) {
             throw new NullPointerException("Erro ao inserir produto.");

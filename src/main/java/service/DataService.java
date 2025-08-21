@@ -5,19 +5,21 @@
 
 package service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import mediator.LogMediator;
-import model.ProductModel;
-import model.UserModel;
-import java.io.*;
-import java.util.Scanner;
-
-import model.UserClientModel;
-import model.UserSellerModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import mediator.LogMediator;
+import model.ProductModel;
+import model.UserClientModel;
+import model.UserModel;
+import model.UserSellerModel;
 
 //classe responsavel por salvar e carregar os dados do arquivo
 //tambem é responsavel por guardar os objetos em collecttions enquanto o programa
@@ -27,8 +29,13 @@ public final class DataService {
     private static final String filePathUsers = "src/savedfiles/users.json";
     private static final HashMap<String, UserModel> users = new HashMap<>();
     private static final ArrayList<ProductModel> products = new ArrayList<>();
+    private LogMediator mediator;
 
-    public void readFromFiles(File produto, File usuario){
+    public DataService(LogMediator mediator){
+        this.mediator = mediator;
+    }
+
+    public void readFromFiles(File produto, File usuario) throws IOException {
         //Foram criadas quatro variáveis para que o arquivo pudesse ser colocado no formato "String" e implementado em um array no formato "JSON"
         String fileProducts = fileToString (filePathProducts);
         String fileUsers = fileToString (filePathUsers);
@@ -62,14 +69,14 @@ public final class DataService {
             JSONArray arrayProducts = obj.getJSONArray("products");
 
             for (int j = 0; j <  arrayProducts.length(); j++) {
-                LogMediator.addProductToList(user,array.getString(j)); //adiciona produto à lista do usuário
+                mediator.addProductToList(user, arrayProducts.getString(j)); //adiciona produto à lista do usuário
             }
         }
 
 
     }
 
-    private String fileToString(String fileName){
+    private String fileToString(String fileName) throws IOException {
         return new String(Files.readAllBytes(Paths.get(fileName)));
     }
 
