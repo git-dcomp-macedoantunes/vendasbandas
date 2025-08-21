@@ -7,117 +7,72 @@ package service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import mediator.LogMediator;
 import model.ProductModel;
 import model.UserModel;
 import java.io.*;
+import java.util.Scanner;
+
 import model.UserClientModel;
 import model.UserSellerModel;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 //classe responsavel por salvar e carregar os dados do arquivo
 //tambem é responsavel por guardar os objetos em collecttions enquanto o programa
 //é executado
 public final class DataService {
+    private static final String filePathProducts = "src/savedfiles/products.json";
+    private static final String filePathUsers = "src/savedfiles/users.json";
     private static final HashMap<String, UserModel> users = new HashMap<>();
     private static final ArrayList<ProductModel> products = new ArrayList<>();
-    
+
     public void readFromFiles(File produto, File usuario){
-     
-      try {
-          int i=0, m=0;
-          String linhaP, linhaU;
-          
-          
-          //Leitores
-          FileReader produtoR = new FileReader (produto);
-          FileReader usuarioR = new FileReader (usuario);
-          BufferedReader produtoBR = new BufferedReader (produtoR); 
-          BufferedReader usuarioBR = new BufferedReader (usuarioR);
-          
-          
-          // Todos referentes a Produtos
-          ArrayList<String> name = new ArrayList<>();
-          ArrayList<String> price = new ArrayList<>();
-          ArrayList<String> stock = new ArrayList<>();
-          ArrayList<String> description = new ArrayList<>();
-          ArrayList<String> keyOwner = new ArrayList<>();
-          
-          
-          //Todos referentes a Users C para Clients e S para Sellers
-          ArrayList<String> usernameC = new ArrayList<>();
-          ArrayList<String> passwordC = new ArrayList<>();
-          ArrayList<String> usernameS = new ArrayList<>();
-          ArrayList<String> passwordS = new ArrayList<>();
-          
-          
-          //Colocando cada linha como um valor específico, já que será necessario separar por \n, apenas dos Users
-          //VALORES IMPORTAM: Nao pode ter x usernames e y passowords, erro
-          while  ((linhaU = usuarioBR.readLine()) != null){
+        //Foram criadas quatro variáveis para que o arquivo pudesse ser colocado no formato "String" e implementado em um array no formato "JSON"
+        String fileProducts = fileToString (filePathProducts);
+        String fileUsers = fileToString (filePathUsers);
+        JSONArray jsonArrayProducts = new JSONArray (fileProducts);
+        JSONArray jsonArrayUsers = new JSONArray (fileUsers);
 
-              if (linhaU.replaceAll(" ", "").startsWith("clientusername")){
-                usernameC.add(linhaU.replaceAll(" ", "").substring("clientusername".length()));
-                i++;
-                }
-             
-             if (linhaU.replaceAll(" ", "").startsWith("clientpassword")){
-                passwordC.add(linhaU.replaceAll(" ", "").substring( "clientpassword".length()));
-                }
-             
-             if (linhaU.replaceAll(" ", "").startsWith("sellerusername")){
-                usernameS.add(linhaU.replaceAll(" ", "").substring("sellerusername".length()));
-                m++;
-                }
-             
-             if (linhaU.replaceAll(" ", "").startsWith("sellerpassword")){
-                passwordS.add(linhaU.replaceAll(" ", "").substring("sellerpassword".length()));
-                }
-            }
+        JSONObject obj;
 
-             
-          //colocação dos valores nos seus respectivos HashMap, com a KEY sendo se ele é cliente ou vendedor e o valor dele
-           for (int j=0; j <i; j++){
-               users.put("client" +j, (new UserClientModel (usernameC.get(j), passwordC.get(j))));
-               } 
+        //Essa implementação consiste em criar objetos, indicando suas chaves e valores, com o intuito de adicionar em ArraysLists
+        for (int i = 0; i < jsonArrayProducts.length(); i++) {
+            obj = jsonArrayProducts.getJSONObject(i);
+            ProductModel product = new ProductModel(obj.getString("name"), obj.getDouble("price"),obj.getString("description"), obj.getInt("stock"));
+            products.add(product);
+            //Criação de produto para cada JSONObject no array
+        }
 
-           for (int j=0; j <m; j++){
-               users.put("seller" +j, (new UserSellerModel (usernameS.get(j), passwordS.get(j))));
-               } 
-               
-          
-          //Mesma coisa dos Users, só que para os Produtos
-          i =0;
-            while ((linhaP = produtoBR.readLine()) != null) {
-                if (linhaP.startsWith("name")){ //ve se tem a palavra nome nessa linha
-                    name.add(linhaP.replaceAll(" ", "").substring("name".length()));//ele vai ignorar a palavra nome "name DiscoA"
-                i++;
-                }
-                
-                if (linhaP.startsWith("price")) {
-                    price.add(linhaP.replaceAll(" ", "").substring("price".length()));
-                } 
-                
-                 if (linhaP.startsWith("stock")) {
-                    stock.add(linhaP.replaceAll(" ", "").substring("stock".length()));
-                } 
-                 
-                 if (linhaP.startsWith("description")) {
-                    description.add(linhaP.replaceAll(" ", "").substring("description".length()));
-                }
-                
-                if (linhaP.startsWith("keyOwner")) { //Esse keyOwner será o valor da KEY do User, mostrado mais acima
-                    keyOwner.add(linhaP.replaceAll(" ", "").substring("keyOwner".length()));
-                } 
+        for (int i = 0; i < jsonArrayUsers.length(); i++) {
+            obj = jsonArrayUsers.getJSONObject(i);
+            UserModel user;
+            if (obj.getString("type").equals("client")){
+                 user  = new UserClientModel(obj.getString("username"), obj.getString("password"));
             }
-            
-             for (int j=0; j <i; j++){
-               products.add (new ProductModel(name.get(j), Double.parseDouble(price.get(j)), (description.get(j))));
-               products.get(j).setStock(Integer.parseInt(stock.get(j)));
-               products.get(j).setOwner(users.get(keyOwner.get(j)));
-               }  
-              
-            
-        } catch (IOException e) {
-            System.out.println("Ocorreu um erro ao ler o arquivo: " + e.getMessage());
+            else if (obj.getString("type").equals("seller")){
+                user  = new UserSellerModel(obj.getString("username"), obj.getString("password"));
             }
+            else {
+                throw new IllegalArgumentException (obj.getString("type"));
+            }
+            //Cria objetos e coloca no hash para depois, por meio do array, relacionar os produtos com cada objeto
+            users.put(user.getUsername(), user);
+            JSONArray arrayProducts = obj.getJSONArray("products");
+
+            for (int j = 0; j <  arrayProducts.length(); j++) {
+                LogMediator.addProductToList(user,array.getString(j)); //adiciona produto à lista do usuário
+            }
+        }
+
+
     }
+
+    private String fileToString(String fileName){
+        return new String(Files.readAllBytes(Paths.get(fileName)));
+    }
+
 
 
     //lê produtos, *depois* lê usuários e então faz as ligações necessarias
@@ -125,14 +80,19 @@ public final class DataService {
     //produto[i].owner = users.get(produto[i].owner)
     //então, checa a lista de (ids?) de ProductModel em cada UserModel
     //e cria a lista corretamente
-    
+
     //public void saveToFile(file, usuario/produto)
     //formata ele
     //salva no arquivo(de produto ou usuario) como nova linha
     //modelo:
     //user: tipo usuario senha lista ids
     //produto: nome preco descricao estoque usuario id?
-    
+
+
+
+    public void saveToFiles(File produtoFile, File usuarioFile) {}
+
+
     //getters
     public HashMap<String, UserModel> getUsers(){
         return users;
@@ -141,4 +101,3 @@ public final class DataService {
         return products;
     }
 }
-
