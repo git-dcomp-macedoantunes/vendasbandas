@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${produto.name}">Detalhes do Produto</title>
+</head>
+<body>
+<h1 th:text="${produto.name}">Nome do disco</h1>
+<p th:text="${produto.description}">Descrição do disco</p>
+<p>Preço: R$ <span th:text="${produto.price}">0.00</span></p>
+
+<form th:action="@{'/carrinho/adicionar/' + ${produto.id}}" method="post">
+    <button type="submit">Adicionar ao carrinho</button>
+</form>
+
+<br>
+<a href="/">Voltar à lista</a>
+</body>
+</html>

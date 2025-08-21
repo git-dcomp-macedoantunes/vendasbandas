@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Loja de Discos</title>
+</head>
+<body>
+<h1>Discos disponíveis</h1>
+
+<ul>
+    <!-- percorre a lista enviada pelo Controller -->
+    <li th:each="produto : ${produtos}">
+        <strong th:text="${produto.name}">Nome do disco</strong> -
+        R$ <span th:text="${produto.price}">0.00</span>
+        <br>
+        <a th:href="@{'/produto/' + ${produto.id}}">Ver detalhes</a>
+        <form th:action="@{'/carrinho/adicionar/' + ${produto.id}}" method="post">
+            <button type="submit">Adicionar ao carrinho</button>
+        </form>
+    </li>
+</ul>
+</body>
+</html>
+
