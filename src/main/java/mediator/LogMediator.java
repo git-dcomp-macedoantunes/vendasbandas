@@ -18,8 +18,12 @@ import service.DataService;
 
 public class LogMediator implements Mediator{
     //é final porq não é pra mudar o endereço dele.
-    private final DataService data = new DataService(this);
-
+    private DataService data;
+    
+    public LogMediator(){
+        this.data = new DataService(this);
+    }
+    
     //loga o usuário, dependendo de "mode" ele registra um tipo de usuário diferente
     //esse "mode" deve ser dado pelo controller.
     // !!!!!!! Util pra controller
