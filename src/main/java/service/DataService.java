@@ -89,8 +89,8 @@ public final class DataService {
         return Files.readString(fileName);
     }
 
-    //salva os dados do produto e usuário em arquivos JSON
-     public void saveToFile() throws IOException {
+  //salva os dados do produto e usuário em arquivos JSON
+    public void saveToFile() throws IOException {
         JSONArray jsonArrayProducts = new JSONArray(); //criação da lista
         for (int i = 0; i < products.size(); i++) {
             ProductModel product = products.get(i);
@@ -99,7 +99,7 @@ public final class DataService {
             obj.put("price", product.getPrice());
             obj.put("description", product.getDescription());
             obj.put("stock", product.getStock());
-           //Adição dos atributos referentes ao produto
+            //Adição dos atributos referentes ao produto
 
             jsonArrayProducts.put(obj);
         }
@@ -109,10 +109,30 @@ public final class DataService {
             UserModel user = usersList.get(j);
             JSONObject obj = new JSONObject();
             obj.put("username", user.getUsername());
-            String password = mediator.getUserPassword (user); 
+            String password = mediator.getUserPassword (user);
             obj.put("password", password);
+            String type;
+            if (user instanceof UserClientModel) {
+                type = "client";
+            }
+            else if (user instanceof UserSellerModel) {
+                type = "seller";
+            }
+            else {
+                type = "unknown";
+            }
+            obj.put("type", type);
 
-            jsonArrayUsers.put(obj);
+        JSONArray userProducts = new JSONArray();
+        List<ProductModel> list = mediator.getProductList(user); //chama o método que retorna a lista de produtos de um usuário
+        for (int k = 0; k < list.size(); k++) {
+            ProductModel product = list.get(k);
+            JSONObject pObj = new JSONObject();
+            pObj.put("name", product.getName());
+            userProducts.put(pObj);
+        }
+        obj.put("products", userProducts);
+        jsonArrayUsers.put(obj);
         }
 
         Files.write(FILEPATHPRODUCTS, jsonArrayProducts.toString(4).getBytes()); //salva os arquivos
