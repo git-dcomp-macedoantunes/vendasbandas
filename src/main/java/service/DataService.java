@@ -22,10 +22,12 @@ import model.ProductModel;
 import model.UserClientModel;
 import model.UserModel;
 import model.UserSellerModel;
+import org.springframework.stereotype.Service;
 
 //classe responsavel por salvar e carregar os dados do arquivo
 //tambem é responsavel por guardar os objetos em collecttions enquanto o programa
 //é executado
+@Service
 public final class DataService {
     private static final String FILEPATHPRODUCTS = "src/savedfiles/products.json";
     private static final String FILEPATHUSERS = "src/savedfiles/users.json";
