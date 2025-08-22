@@ -22,54 +22,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Diogo Lima
  */
 @Controller
-@RequestMapping ("/product")
+@RequestMapping ("/")
 public class ProductController {
     
         private final LogMediator service;
         private ArrayList <ProductModel> allProducts;
 
         
-        public ProductController (LogMediator action, UserModel user) {
-            this.service = action;
+        public ProductController (LogMediator service) {
+            this.service = service;
         }
         
         //Pag principal de produtos todos os produtos do site
-         @GetMapping ("/product")
+         @GetMapping
            public ArrayList<ProductModel> getAllProducts(ArrayList<UserSellerModel> sellers){
                for (int i=0; i < sellers.size(); i++){
                allProducts.addAll(sellers.get(i).getProductList());
                }
-              return  allProducts;
+            return  allProducts;
            }
-        
-        //Olha o carrinho para cliente
-        //Olha a lista de produtos a venda para vendedor
-           @GetMapping ("/carrinho/{user}")
-           public ArrayList<ProductModel> getProducts(@PathVariable UserModel user){
-               return service.getProductList (user);
-           }
-           
-           
+            
          //Pega um produto especifico do servidor;
            @GetMapping ("/product/{name}")
            public ProductModel getProductByName(@PathVariable String name){
-               return service.findProductByName(name); 
-           }
-           
-           //Deleta um produto especifico do servidor se for vendedor
-           //Tira do carrinho se for cliente
-           @DeleteMapping ("/product/{user}/delete_{name}_da_lista")
-           public String deleteProduct (@PathVariable String name, @PathVariable UserModel user){
-                service.getProductList(user).remove(service.findProductByName(name));
-               return "redirect:/product/{user}";
+            return service.findProductByName(name); 
            }
            
            //cria um produto novo no servidor para vendedores apenas
-           @PostMapping ("/{product}")
-           public String createProduct(@RequestBody ProductModel product, @PathVariable UserModel user) {
+           @PostMapping ("/log/product/{user}")
+           public String createProduct(@RequestBody ProductModel product,@PathVariable UserModel user) {
                if (user.getClass() == UserSellerModel.class){
+               try{
                service.logProduct(product.getName(), product.getPrice(), user, product.getDescription(), product.getStock());
-                }
-            return "redirect:/product";
+               } catch (IllegalArgumentException |  NullPointerException e){
+                   System.out.println (e.getMessage());
+               }
+               }
+            return "redirect:/product/{user}";
            }
 }
