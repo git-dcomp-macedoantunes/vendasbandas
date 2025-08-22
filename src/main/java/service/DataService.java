@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -86,8 +87,36 @@ public final class DataService {
         return new String(Files.readAllBytes(Paths.get(fileName)));
     }
 
-    public void saveToFiles(File produtoFile, File usuarioFile) {}
+    //salva os dados do produto e usuário em arquivos JSON
+     public void saveToFiles(File produtoFile, File usuarioFile) throws IOException {
+        JSONArray jsonArrayProducts = new JSONArray(); //criação da lista
+        for (int i = 0; i < products.size(); i++) {
+            ProductModel product = products.get(i);
+            JSONObject obj = new JSONObject();
+            obj.put("name", product.getName());
+            obj.put("price", product.getPrice());
+            obj.put("description", product.getDescription());
+            obj.put("stock", product.getStock());
+           //Adição dos atributos referentes ao produto
 
+            jsonArrayProducts.put(obj);
+        }
+        JSONArray jsonArrayUsers = new JSONArray();
+        List<UserModel> usersList = new ArrayList<>(users.values()); //criação da ArrayList para o recebimento dos índices
+        for (int j = 0; j < usersList.size(); j++ ) {
+            UserModel user = usersList.get(j);
+            JSONObject obj = new JSONObject();
+            obj.put("username", user.getUsername());
+            String password = mediator.getUserPassword (user); 
+            obj.put("password", password);
+
+            jsonArrayUsers.put(obj);
+        }
+
+        Files.write(produtoFile.toPath(), jsonArrayProducts.toString(4).getBytes()); //salva os arquivos
+        Files.write(usuarioFile.toPath(), jsonArrayUsers.toString(4).getBytes());
+    }
+    
     //cria usuario, coloca no hash e salva no arquivo
     public void logUser(String type, String username, String password) throws IllegalArgumentException {
         UserModel user;
