@@ -8,7 +8,7 @@ package service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,8 +27,8 @@ import model.UserSellerModel;
 //tambem é responsavel por guardar os objetos em collecttions enquanto o programa
 //é executado
 public final class DataService {
-    private static final String FILEPATHPRODUCTS = "src/savedfiles/products.json";
-    private static final String FILEPATHUSERS = "src/savedfiles/users.json";
+    private final Path FILEPATHPRODUCTS = Path.of("products.json");
+    private final Path FILEPATHUSERS = Path.of("users.json");
     private static final HashMap<String, UserModel> users = new HashMap<>();
     private static final ArrayList<ProductModel> products = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public final class DataService {
         this.mediator = mediator;
     }
 
-    public void readFromFiles(File produto, File usuario) throws IOException {
+    public void readFromFiles() throws IOException {
         //Foram criadas quatro variáveis para que o arquivo pudesse ser colocado no formato "String" e implementado em um array no formato "JSON"
         String fileProducts = fileToString (FILEPATHPRODUCTS);
         String fileUsers = fileToString (FILEPATHUSERS);
@@ -83,12 +83,12 @@ public final class DataService {
     }
 
     //transforma o arquivo fileName em apenas uma string, para que funcione no JSONArray
-    private String fileToString(String fileName) throws IOException {
-        return new String(Files.readAllBytes(Paths.get(fileName)));
+    private String fileToString(Path fileName) throws IOException {
+        return Files.readString(fileName);
     }
 
     //salva os dados do produto e usuário em arquivos JSON
-     public void saveToFiles(File produtoFile, File usuarioFile) throws IOException {
+     public void saveToFile() throws IOException {
         JSONArray jsonArrayProducts = new JSONArray(); //criação da lista
         for (int i = 0; i < products.size(); i++) {
             ProductModel product = products.get(i);
@@ -113,12 +113,12 @@ public final class DataService {
             jsonArrayUsers.put(obj);
         }
 
-        Files.write(produtoFile.toPath(), jsonArrayProducts.toString(4).getBytes()); //salva os arquivos
-        Files.write(usuarioFile.toPath(), jsonArrayUsers.toString(4).getBytes());
+        Files.write(FILEPATHPRODUCTS, jsonArrayProducts.toString(4).getBytes()); //salva os arquivos
+        Files.write(FILEPATHUSERS, jsonArrayUsers.toString(4).getBytes());
     }
     
     //cria usuario, coloca no hash e salva no arquivo
-    public void logUser(String type, String username, String password) throws IllegalArgumentException {
+    public void logUser(String type, String username, String password) throws IllegalArgumentException, IOException {
         UserModel user;
         try {
             if (getUsers().get(username) != null){ //caso haja colisão
@@ -127,22 +127,22 @@ public final class DataService {
                 user = UserFactory.getUser(username,password,type);
                 user.setMediator(mediator);
                 getUsers().put(username, user);
-                //TODO: data.saveToFile(users, FILEPATHUSERS)
+                saveToFile();
             }
         } 
-        catch (IllegalArgumentException e) {
+        catch (IllegalArgumentException | IOException e) {
             throw e;
         }
     }
 
     //cria produto, adiciona a lista e salva no arquivo
-    public void logProduct(String name, double price, UserModel owner, String description, int stock) throws IllegalArgumentException, NullPointerException{
+    public void logProduct(String name, double price, UserModel owner, String description, int stock) throws IllegalArgumentException, NullPointerException, IOException{
         try {
             ProductModel product = new ProductModel(name, price, description, stock);
             getProducts().add(product);
             owner.addProduct(product);
-            //TODO: data.saveToFile(product, FILEPATHPRODUCTS)
-        } catch (IllegalArgumentException | NullPointerException e) {
+            saveToFile();
+        } catch (IllegalArgumentException | NullPointerException | IOException e) {
             throw e;
         }
     }
