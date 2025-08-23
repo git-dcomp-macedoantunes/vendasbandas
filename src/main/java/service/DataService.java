@@ -40,6 +40,10 @@ public final class DataService {
         this.mediator = mediator;
     }
 
+    //keys nos JSONObjects:
+        //UserModel -> username, password, type, products (array)
+        //ProductModel -> name, price, description, stock
+        //Essa implementação consiste em criar objetos, indicando suas chaves e valores, com o intuito de adicionar em ArraysLists
     public void readFromFiles() throws IOException {
         //Foram criadas quatro variáveis para que o arquivo pudesse ser colocado no formato "String" e implementado em um array no formato "JSON"
         String fileProducts = fileToString (FILEPATHPRODUCTS);
@@ -48,10 +52,6 @@ public final class DataService {
         JSONArray jsonArrayUsers = new JSONArray (fileUsers);
 
         JSONObject obj;
-        //keys nos JSONObjects:
-        //UserModel -> username, password, type, products (array)
-        //ProductModel -> name, price, description, stock
-        //Essa implementação consiste em criar objetos, indicando suas chaves e valores, com o intuito de adicionar em ArraysLists
         for (int i = 0; i < jsonArrayProducts.length(); i++) {
             obj = jsonArrayProducts.getJSONObject(i);
             ProductModel product = new ProductModel(obj.getString("name"), obj.getDouble("price"), 
@@ -104,7 +104,7 @@ public final class DataService {
             jsonArrayProducts.put(obj);
         }
         JSONArray jsonArrayUsers = new JSONArray();
-        List<UserModel> usersList = new ArrayList<>(users.values()); //criação da ArrayList para o recebimento dos índices
+        ArrayList<UserModel> usersList = new ArrayList<>(users.values()); //criação da ArrayList para o recebimento dos índices
         for (int j = 0; j < usersList.size(); j++ ) {
             UserModel user = usersList.get(j);
             JSONObject obj = new JSONObject();
@@ -123,16 +123,16 @@ public final class DataService {
             }
             obj.put("type", type);
 
-        JSONArray userProducts = new JSONArray();
-        List<ProductModel> list = mediator.getProductList(user); //chama o método que retorna a lista de produtos de um usuário
-        for (int k = 0; k < list.size(); k++) {
-            ProductModel product = list.get(k);
-            JSONObject pObj = new JSONObject();
-            pObj.put("name", product.getName());
-            userProducts.put(pObj);
-        }
-        obj.put("products", userProducts);
-        jsonArrayUsers.put(obj);
+            JSONArray userProducts = new JSONArray();
+            List<ProductModel> list = mediator.getProductList(user); //chama o método que retorna a lista de produtos de um usuário
+            for (int k = 0; k < list.size(); k++) {
+                ProductModel product = list.get(k);
+                JSONObject pObj = new JSONObject();
+                pObj.put("name", product.getName());
+                userProducts.put(pObj);
+            }
+            obj.put("products", userProducts);
+            jsonArrayUsers.put(obj);
         }
 
         Files.write(FILEPATHPRODUCTS, jsonArrayProducts.toString(4).getBytes()); //salva os arquivos

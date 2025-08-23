@@ -4,6 +4,7 @@
  */
 package mediator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import model.ProductModel;
@@ -17,7 +18,7 @@ import service.DataService;
 
 public class LogMediator implements Mediator{
     //é final porq não é pra mudar o endereço dele.
-    private DataService data;
+    private final DataService data;
     
     public LogMediator(){
         this.data = new DataService(this);
@@ -26,13 +27,13 @@ public class LogMediator implements Mediator{
     //loga o usuário, dependendo de "mode" ele registra um tipo de usuário diferente
     //esse "mode" deve ser dado pelo controller.
     @Override
-    public void logUser(String type, String username, String password) throws IllegalArgumentException {
+    public void logUser(String type, String username, String password) throws IllegalArgumentException, IOException{
         data.logUser(type, username, password);
     }
 
     //cria um produto, e cadastra ele no arquivo
     @Override
-    public void logProduct(String name, double price, UserModel owner, String description, int stock) throws IllegalArgumentException, NullPointerException{
+    public void logProduct(String name, double price, UserModel owner, String description, int stock) throws IllegalArgumentException, NullPointerException, IOException{
         data.logProduct(name, price, owner, description, stock);
     }
     
@@ -69,7 +70,10 @@ public class LogMediator implements Mediator{
         }
         return null;
     }
-
+    @Override
+    public String getUserPassword(UserModel user){
+        return user.getPassword();
+    }
     @Override
     public DataService getDataService(){
         return data;

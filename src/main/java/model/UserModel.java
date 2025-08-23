@@ -67,6 +67,10 @@ public abstract class UserModel {
     public String getUsername(){
         return this.username;
     }
+
+    public String getPassword(){
+        return this.password;
+    }
     
     //Obriga as classes filhas a ter esses metodos
     public abstract void addProduct(ProductModel product) throws IllegalArgumentException, NullPointerException;
