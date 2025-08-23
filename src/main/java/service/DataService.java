@@ -5,7 +5,6 @@
 
 package service;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,6 +14,7 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.stereotype.Service;
 
 import factory.UserFactory;
 import mediator.LogMediator;
@@ -22,7 +22,6 @@ import model.ProductModel;
 import model.UserClientModel;
 import model.UserModel;
 import model.UserSellerModel;
-import org.springframework.stereotype.Service;
 
 //classe responsavel por salvar e carregar os dados do arquivo
 //tambem é responsavel por guardar os objetos em collecttions enquanto o programa
@@ -45,6 +44,8 @@ public final class DataService {
         //ProductModel -> name, price, description, stock
         //Essa implementação consiste em criar objetos, indicando suas chaves e valores, com o intuito de adicionar em ArraysLists
     public void readFromFiles() throws IOException {
+        users.clear();
+        products.clear();
         //Foram criadas quatro variáveis para que o arquivo pudesse ser colocado no formato "String" e implementado em um array no formato "JSON"
         String fileProducts = fileToString (FILEPATHPRODUCTS);
         String fileUsers = fileToString (FILEPATHUSERS);
@@ -74,10 +75,11 @@ public final class DataService {
             }
             //Cria objetos e coloca no hash para depois, por meio do array, relacionar os produtos com cada objeto
             users.put(user.getUsername(), user);
+            user.setMediator(mediator);
             JSONArray arrayProducts = obj.getJSONArray("products");
 
             for (int j = 0; j <  arrayProducts.length(); j++) {
-                mediator.addProductToList(user, arrayProducts.getString(j)); //adiciona produto à lista do usuário
+                mediator.addProductToList(user, (arrayProducts.getJSONObject(j)).getString("name")); //adiciona produto à lista do usuário
             }
         }
 
@@ -162,7 +164,7 @@ public final class DataService {
         try {
             ProductModel product = new ProductModel(name, price, description, stock);
             getProducts().add(product);
-            owner.addProduct(product);
+            mediator.addProductToList(owner, name);
             saveToFile();
         } catch (IllegalArgumentException | NullPointerException | IOException e) {
             throw e;

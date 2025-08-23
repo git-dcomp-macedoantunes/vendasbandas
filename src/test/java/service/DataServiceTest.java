@@ -30,16 +30,11 @@ public class DataServiceTest {
     }
     
     @BeforeAll
-    public static void setUpClass() {
-        mediatortest = new LogMediator();
-        instance = mediatortest.getDataService();
-        //try{
-        //(new DataServiceTest()).testLogProduct();
-        (new DataServiceTest()).testLogUser();
-        //instance.readFromFiles();
-        //} catch (IOException e){
-            
-        //}
+    public static void setUpClass() throws IOException {
+    mediatortest = new LogMediator();
+    instance = mediatortest.getDataService();
+    instance.readFromFiles();
+    System.out.println(instance);
     }
     
     @AfterAll
@@ -48,11 +43,14 @@ public class DataServiceTest {
     
     @BeforeEach
     public void setUp() throws IOException {
-        instance.readFromFiles();
+        
     }
     
     @AfterEach
-    public void tearDown() {
+    public void tearDown() throws IOException {
+        instance.getUsers().clear();
+        instance.getProducts().clear();
+        instance.saveToFile();
     }
 
     /**
@@ -61,8 +59,8 @@ public class DataServiceTest {
     @Test
     public void testReadFromFiles() throws IOException {
         System.out.println("readFromFiles");
-        instance.readFromFiles();
-        assertEquals( "username4" ,instance.getUsers().get("username4").getUsername());
+        instance.logUser("seller", "username", "password");
+        assertEquals( "username" ,instance.getUsers().get("username").getUsername());
         // TODO review the generated test code and remove the default call to fail.
     }
 
@@ -73,9 +71,9 @@ public class DataServiceTest {
     public void testLogUser() {
         System.out.println("logUser");
         String type = "seller";
-        String username = "username3";
+        String username = "username02";
         String password = "password1";
-        try{
+        try{    
             instance.logUser(type, username, password);
         }
         catch(Exception e){
@@ -89,7 +87,7 @@ public class DataServiceTest {
     @Test
     public void testLogProduct() {   
         System.out.println("logProduct");
-        String name = "TestProduct";
+        String name = "Test Product5";
         double price = 5.0;
         UserModel owner = new UserSellerModel("Test Username", "Test Password");
         owner.setMediator(mediatortest);
@@ -101,6 +99,32 @@ public class DataServiceTest {
         catch(Exception e){
             fail(e.toString());
         }
+    }
+    
+    @Test
+    public void testProductList() throws IOException{
+        System.out.println("setOwner (via DataService)");
+        try{
+            instance.logUser("seller", "userseller", "userseller");
+            instance.logUser("client", "userclient", "userclient");
+            UserModel userseller = instance.getUsers().get("userseller");
+            UserModel userclient = instance.getUsers().get("userclient");
+            
+            instance.logProduct("producttest", 5, userseller, "description", 5); // logProduct ja tem addProductToList ent n vou testar com userseller
+            instance.logProduct("producttest2", 5, userseller, "description", 5);
+            
+            mediatortest.addProductToList(userclient, "producttest");
+            mediatortest.addProductToList(userclient, "producttest2");
+            
+        } catch (IOException e){
+            fail(e.toString());
+        }   
+        //limpar a memoria atual
+        instance.getUsers().clear();
+        instance.getProducts().clear();
+        //carregar os arquivos dnv
+        instance.readFromFiles();
+        assertEquals("producttest", instance.getUsers().get("userclient").getProductList().get(0).getName());
     }
     
 }

@@ -20,7 +20,7 @@ public interface Mediator {
     //informe quais são os itens na lista do usuario (a venda ou no carrinho)
     public ArrayList<ProductModel> getProductList(UserModel user);
     //adicione produto a esse usuário
-    public void addProductToList(UserModel user, String product);
+    public void addProductToList(UserModel user, String product) throws IOException;
     //encontre o produto com esse nome
     public ProductModel findProductByName(String product);
     //retorne o DataService

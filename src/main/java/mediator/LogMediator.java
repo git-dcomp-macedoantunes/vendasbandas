@@ -20,8 +20,9 @@ public class LogMediator implements Mediator{
     //é final porq não é pra mudar o endereço dele.
     private final DataService data;
     
-    public LogMediator(){
+    public LogMediator() {
         this.data = new DataService(this);
+
     }
 
     //loga o usuário, dependendo de "mode" ele registra um tipo de usuário diferente
@@ -56,9 +57,10 @@ public class LogMediator implements Mediator{
     }
     
     @Override
-    public void addProductToList(UserModel user, String product){
+    public void addProductToList(UserModel user, String product) throws IOException{
         ProductModel productFound = findProductByName(product);
         user.addProduct(productFound);
+        data.saveToFile();
     }
 
     @Override 
