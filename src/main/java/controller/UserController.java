@@ -30,52 +30,102 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserController {
     
          private final LogMediator service;
+         private UserModel userPrincipal;
          
          public UserController (LogMediator service) {
              this.service = service;
+             this.userPrincipal = null;
          }
-    
+        
+        //loga usuario
+        @GetMapping ("/login")
+        public String logarUsuario (String password, String username){
+            
+        if (service.getDataService().getUsers().containsKey(username) && service.getDataService().getUsers().get(username).getPassword().equals(password)){
+            userPrincipal = service.getDataService().getUsers().get(username);
+            return "redirect:/";
+        } else {
+            IllegalArgumentException e = new IllegalArgumentException("Usuario ou senha incorretos");
+             System.out.println(e.getMessage());
+             return "/login";
+        }
+        }
+        
+        //desloga usuario
+        @GetMapping ("/logout")
+        public String logoutUsuario() {
+            userPrincipal = null;
+            return "/login";
+        }
+         
         //Olha o carrinho para cliente
         //Olha a lista de produtos a venda para vendedor
-        @GetMapping ("/lista/{user}")
-        public ArrayList<ProductModel> getProducts(@PathVariable UserModel user){
-            return service.getProductList (user);
+        @GetMapping ("/lista/{userPrincipal}")
+        public ArrayList<ProductModel> getProducts(){
+            return service.getProductList (userPrincipal);
         }
         
         //Adiciona no carrinho
-         @PostMapping ("/lista/{user}/add{product}")
-        public String addProductToCarrinho(@PathVariable UserModel user, @PathVariable String product){
+         @PostMapping ("/lista/{userPrincipal}/add{product}")
+        public String addProductToCarrinho( @PathVariable String product){
              try {
-                 service.addProductToList(user, product);
+                 service.addProductToList(userPrincipal, product);
              } catch (IOException ex) {
                  System.getLogger(UserController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-             }
+             }catch (NullPointerException e){
+                System.out.println ("Usuario não está logado");
+                return "/login";
+        } 
             return "redirect:/lista/{user}";
         }
         
         //Deleta um produto especifico do servidor se for vendedor
         //Tira do carrinho se for cliente
-        @DeleteMapping ("/product/{user}/delete_{name}_da_lista")
-        public String deleteProduct (@PathVariable String name, @PathVariable UserModel user){
-            service.getProductList(user).remove(service.findProductByName(name));
-            return "redirect:/product/{user}";
+        @DeleteMapping ("/product/{userPrincipal}/delete_{name}_da_lista")
+        public String deleteProduct (@PathVariable String name){
+            try{
+            service.getProductList(userPrincipal).remove(service.findProductByName(name));
+            }catch (NullPointerException e){
+            System.out.println ("Usuario não está logado");
+            return "/login";
+        } 
+            return "redirect:/product/{userPrincipal}";
         }
         
+        //deleta o usuario logado
         @DeleteMapping ("/product/deleteUser")
-        public String deleteUser (UserModel user){
-        
-        if (service.getDataService().getUsers().containsValue(user)){
-            service.getProductList(user).clear();
-            service.getDataService().getUsers().remove(user.getUsername());
+        public String deleteUser (){
+        try{
+        if (service.getDataService().getUsers().containsValue(userPrincipal)){
+            service.getProductList(userPrincipal).clear();
+            service.getDataService().getUsers().remove(userPrincipal.getUsername());
         }else{
             IllegalArgumentException e = new IllegalArgumentException("Usuario não encontrado");
              System.out.println(e.getMessage());
         }
-            return "redirect:/log/user";
+        }catch (NullPointerException e){
+            System.out.println ("Usuario não está logado");
+        }
+            return "redirect:/log/userPrincipal";
         }
         
+        //cria um produto novo no servidor para vendedores apenas
+           @PostMapping ("/create/product/{userPrincipal}")
+           public String createProduct(@RequestBody ProductModel product) {
+               if (userPrincipal.getClass() == UserSellerModel.class){
+               try{
+               service.logProduct(product.getName(), product.getPrice(), userPrincipal, product.getDescription(), product.getStock());
+               } catch (IllegalArgumentException |  NullPointerException e){
+                   System.out.println (e.getMessage());
+               }   catch (IOException ex) {
+                       System.getLogger(ProductController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                   }
+               }
+            return "redirect:/product/{user}";
+           }
+        
         //Cria um novo usuario;
-        @PostMapping ("/log/user")
+        @PostMapping ("/sign-in/user")
         public String createUser (@RequestBody UserModel user, String password){
             try{
             if (user.getClass() == UserSellerModel.class){
