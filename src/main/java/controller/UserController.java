@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import mediator.LogMediator;
 import model.ProductModel;
@@ -44,7 +45,11 @@ public class UserController {
         //Adiciona no carrinho
          @PostMapping ("/lista/{user}/add{product}")
         public String addProductToCarrinho(@PathVariable UserModel user, @PathVariable String product){
-            service.addProductToList(user, product);
+             try {
+                 service.addProductToList(user, product);
+             } catch (IOException ex) {
+                 System.getLogger(UserController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+             }
             return "redirect:/lista/{user}";
         }
         
@@ -54,6 +59,19 @@ public class UserController {
         public String deleteProduct (@PathVariable String name, @PathVariable UserModel user){
             service.getProductList(user).remove(service.findProductByName(name));
             return "redirect:/product/{user}";
+        }
+        
+        @DeleteMapping ("/product/deleteUser")
+        public String deleteUser (UserModel user){
+        
+        if (service.getDataService().getUsers().containsValue(user)){
+            service.getProductList(user).clear();
+            service.getDataService().getUsers().remove(user.getUsername());
+        }else{
+            IllegalArgumentException e = new IllegalArgumentException("Usuario não encontrado");
+             System.out.println(e.getMessage());
+        }
+            return "redirect:/log/user";
         }
         
         //Cria um novo usuario;
@@ -68,6 +86,8 @@ public class UserController {
             }
         } catch (IllegalArgumentException | NullPointerException e){
                 System.out.println (e.getMessage());
+             } catch (IOException ex) {
+                 System.getLogger(UserController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
              }
             return "redirect:/";
         }

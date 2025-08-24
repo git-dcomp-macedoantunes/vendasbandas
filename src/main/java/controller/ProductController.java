@@ -1,4 +1,5 @@
 package controller;
+import java.io.IOException;
 import java.util.ArrayList;
 import mediator.LogMediator;
 import model.ProductModel;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ProductController {
     
         private final LogMediator service;
-        private ArrayList <ProductModel> allProducts;
 
         
         public ProductController (LogMediator service) {
@@ -36,10 +36,7 @@ public class ProductController {
         //Pag principal de produtos todos os produtos do site
          @GetMapping
            public ArrayList<ProductModel> getAllProducts(ArrayList<UserSellerModel> sellers){
-               for (int i=0; i < sellers.size(); i++){
-               allProducts.addAll(sellers.get(i).getProductList());
-               }
-            return  allProducts;
+            return service.getDataService().getProducts();
            }
             
          //Pega um produto especifico do servidor;
@@ -56,7 +53,9 @@ public class ProductController {
                service.logProduct(product.getName(), product.getPrice(), user, product.getDescription(), product.getStock());
                } catch (IllegalArgumentException |  NullPointerException e){
                    System.out.println (e.getMessage());
-               }
+               }   catch (IOException ex) {
+                       System.getLogger(ProductController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                   }
                }
             return "redirect:/product/{user}";
            }
