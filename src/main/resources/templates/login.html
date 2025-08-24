@@ -3,30 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>Login</h1>
+<header>
+    <h1>Loja de Discos</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/carrinho">Carrinho</a>
+        <a href="/user/login">Login</a>
+    </nav>
+</header>
 
-<form th:action="@{/login}" method="post">
-    <label for="username">Usuário:</label>
-    <input type="text" id="username" name="username" required>
-    <br><br>
+<div class="login-container">
+    <h2>Login</h2>
 
-    <label for="password">Senha:</label>
-    <input type="password" id="password" name="password" required>
-    <br><br>
+    <form th:action="@{/user/login}" method="post">
+        <label for="username">Usuário:</label>
+        <input type="text" id="username" name="username" placeholder="Digite seu usuário" required>
 
-    <label for="type">Tipo:</label>
-    <select id="type" name="type" required>
-        <option value="client">Cliente</option>
-        <option value="seller">Vendedor</option>
-    </select>
-    <br><br>
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
 
-    <button type="submit">Entrar</button>
-</form>
+        <button type="submit">Entrar</button>
+    </form>
 
-<p th:if="${erro}" th:text="${erro}" style="color:red;"></p>
-
+    <p th:if="${erro}" th:text="${erro}" class="error"></p>
+</div>
 </body>
 </html>

@@ -3,20 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Carrinho de Compras</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>Seu Carrinho</h1>
+<header>
+    <h1>Loja de Discos</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/carrinho">Carrinho</a>
+        <a href="/login">Login</a>
+    </nav>
+</header>
 
-<ul>
-    <li th:each="item : ${itens}">
-        <span th:text="${item.name}">Nome</span> -
-        R$ <span th:text="${#numbers.formatDecimal(item.price, 1, 'COMMA', 2, 'POINT')}">0,00</span>
-    </li>
-</ul>
+<div class="container">
+    <h2>Seu Carrinho</h2>
 
-<p>Total: R$ <span th:text="${#numbers.formatDecimal(total, 1, 'COMMA', 2, 'POINT')}">0,00</span></p>
+    <ul class="cart-list">
+        <li th:each="item : ${itens}">
+            <span th:text="${item.name}">Nome</span> -
+            R$ <span th:text="${#numbers.formatDecimal(item.price, 1, 'POINT', 2, 'COMMA')}">0,00</span>
 
-<a href="/">Continuar comprando</a> |
-<a href="/checkout">Finalizar compra</a>
+            <!-- Botão de remover do carrinho -->
+            <form th:action="@{'/carrinho/remover/' + ${item.id}}" method="post" style="display:inline;">
+                <button type="submit">Remover</button>
+            </form>
+        </li>
+    </ul>
+
+    <p class="total">Total: R$
+        <span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+    </p>
+
+    <div style="margin-top:20px;">
+        <a href="/" class="btn">Continuar comprando</a>
+        <a href="/checkout" class="btn">Finalizar compra</a>
+    </div>
+</div>
 </body>
 </html>
+

@@ -3,23 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Loja de Discos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1>Discos disponíveis</h1>
+<header>
+    <h1>Loja de Discos</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/carrinho">Carrinho</a>
+        <a href="/login">Login</a>
+    </nav>
+</header>
 
-<ul>
-    <!-- percorre a lista enviada pelo Controller -->
-    <li th:each="produto : ${produtos}">
-        <strong th:text="${produto.name}">Nome do disco</strong> -
-        R$ <span th:text="${#numbers.formatDecimal(produto.price, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+<div class="container">
+    <h2>Discos disponíveis</h2>
 
-        <br>
-        <a th:href="@{'/produto/' + ${produto.id}}">Ver detalhes</a>
+    <div th:each="produto : ${produtos}" class="product-card">
+        <h3 th:text="${produto.name}">Nome do disco</h3>
+        <p>
+            Preço: R$
+            <span th:text="${#numbers.formatDecimal(produto.price, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+        </p>
+        <a th:href="@{'/produto/' + ${produto.id}}" class="btn">Ver detalhes</a>
         <form th:action="@{'/carrinho/adicionar/' + ${produto.name}}" method="post">
             <button type="submit">Adicionar ao carrinho</button>
         </form>
-    </li>
-</ul>
+    </div>
+</div>
 </body>
 </html>
 

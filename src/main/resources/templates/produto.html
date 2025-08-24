@@ -3,18 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${produto.name}">Detalhes do Produto</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<h1 th:text="${produto.name}">Nome do disco</h1>
-<p th:text="${produto.description}">Descrição do disco</p>
-<p>Preço: R$ <span th:text="${#numbers.formatDecimal(produto.price, 1, 'POINT', 2, 'COMMA')}">0,00</span></p>
+<header>
+    <h1>Loja de Discos</h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/carrinho">Carrinho</a>
+        <a href="/login">Login</a>
+    </nav>
+</header>
 
+<div class="container">
+    <div class="product-card">
+        <h1 th:text="${produto.name}">Nome do disco</h1>
+        <p th:text="${produto.description}">Descrição do disco</p>
+        <p>
+            Preço: R$
+            <span th:text="${#numbers.formatDecimal(produto.price, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+        </p>
 
-<form th:action="@{'/carrinho/adicionar/' + ${produto.name}}" method="post">
-    <button type="submit">Adicionar ao carrinho</button>
-</form>
+        <form th:action="@{'/carrinho/adicionar/' + ${produto.name}}" method="post">
+            <button type="submit">Adicionar ao carrinho</button>
+        </form>
 
-<br>
-<a href="/">Voltar à lista</a>
+        <br>
+        <a href="/" class="btn">Voltar à lista</a>
+    </div>
+</div>
 </body>
 </html>
