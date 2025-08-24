@@ -11,10 +11,11 @@
     <!-- percorre a lista enviada pelo Controller -->
     <li th:each="produto : ${produtos}">
         <strong th:text="${produto.name}">Nome do disco</strong> -
-        R$ <span th:text="${produto.price}">0.00</span>
+        R$ <span th:text="${#numbers.formatDecimal(produto.price, 1, 'POINT', 2, 'COMMA')}">0,00</span>
+
         <br>
         <a th:href="@{'/produto/' + ${produto.id}}">Ver detalhes</a>
-        <form th:action="@{'/carrinho/adicionar/' + ${produto.id}}" method="post">
+        <form th:action="@{'/carrinho/adicionar/' + ${produto.name}}" method="post">
             <button type="submit">Adicionar ao carrinho</button>
         </form>
     </li>

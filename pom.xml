@@ -16,63 +16,27 @@
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>17</java.version> 
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
- 
+        <!-- MVC e REST -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-
+        <!-- Thymeleaf para HTML -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-        
-        <dependency>
-            <groupId>com.github.houbb</groupId>
-            <artifactId>mvc-annotation</artifactId>
-            <version>0.0.2</version>
-        </dependency>
-        <dependency>
-            <groupId>dev.soffa.foundation</groupId>
-            <artifactId>foundation-annotations</artifactId>
-            <version>0.17.31</version>
-        </dependency>
+
+        <!-- Testes -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.10.3</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>5.10.3</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.10.3</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-            <version>1.2.6</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
 
@@ -84,5 +48,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

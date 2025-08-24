@@ -10,11 +10,11 @@
 <ul>
     <li th:each="item : ${itens}">
         <span th:text="${item.name}">Nome</span> -
-        R$ <span th:text="${item.price}">0.00</span>
+        R$ <span th:text="${#numbers.formatDecimal(item.price, 1, 'COMMA', 2, 'POINT')}">0,00</span>
     </li>
 </ul>
 
-<p>Total: R$ <span th:text="${total}">0.00</span></p>
+<p>Total: R$ <span th:text="${#numbers.formatDecimal(total, 1, 'COMMA', 2, 'POINT')}">0,00</span></p>
 
 <a href="/">Continuar comprando</a> |
 <a href="/checkout">Finalizar compra</a>

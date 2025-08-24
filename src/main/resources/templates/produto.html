@@ -7,9 +7,10 @@
 <body>
 <h1 th:text="${produto.name}">Nome do disco</h1>
 <p th:text="${produto.description}">Descrição do disco</p>
-<p>Preço: R$ <span th:text="${produto.price}">0.00</span></p>
+<p>Preço: R$ <span th:text="${#numbers.formatDecimal(produto.price, 1, 'POINT', 2, 'COMMA')}">0,00</span></p>
 
-<form th:action="@{'/carrinho/adicionar/' + ${produto.id}}" method="post">
+
+<form th:action="@{'/carrinho/adicionar/' + ${produto.name}}" method="post">
     <button type="submit">Adicionar ao carrinho</button>
 </form>
 
