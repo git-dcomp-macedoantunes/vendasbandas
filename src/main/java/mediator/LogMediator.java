@@ -11,11 +11,13 @@ import model.ProductModel;
 import model.UserModel;
 import model.UserSellerModel;
 import service.DataService;
+import org.springframework.stereotype.Component;
 
 //classe usada para "Logar", logar produtos e contas.
 //ou seja, qunado se cria uma conta ou produto, ela cria e fala pra outra salvar num arquivo
 //media interações entre Controller e Model para tornar elas mais simples
 
+@Component
 public class LogMediator implements Mediator{
     //é final porq não é pra mudar o endereço dele.
     private final DataService data;
