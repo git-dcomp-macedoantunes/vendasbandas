@@ -10,8 +10,8 @@
     <h1>Loja de Discos</h1>
     <nav>
         <a href="/">Home</a>
-        <a href="/carrinho">Carrinho</a>
-        <a href="/login">Login</a>
+        <a href="/user/lista">Carrinho</a>
+        <a href="/user/login">Login</a>
     </nav>
 </header>
 
@@ -24,7 +24,7 @@
             <span th:text="${#numbers.formatDecimal(produto.price, 1, 'POINT', 2, 'COMMA')}">0,00</span>
         </p>
 
-        <form th:action="@{'/carrinho/adicionar/' + ${produto.name}}" method="post">
+        <form th:action="@{'/user/lista/add/' + ${produto.name}}" method="post">
             <button type="submit">Adicionar ao carrinho</button>
         </form>
 
@@ -34,3 +34,4 @@
 </div>
 </body>
 </html>
+
