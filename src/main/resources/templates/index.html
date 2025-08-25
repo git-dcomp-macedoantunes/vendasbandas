@@ -1,22 +1,9 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Loja de Discos</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
-<body>
-<header>
-    <h1>Loja de Discos</h1>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/user/lista">Carrinho</a>
-        <a href="/user/login">Login</a>
-    </nav>
-</header>
-
 <div class="container">
     <h2>Discos disponíveis</h2>
+
+    <div th:if="${user.tipo == 'seller'}">
+        <a href="/novo-produto" class="btn">Adicionar Produto</a>
+    </div>
 
     <div th:each="produto : ${produtos}" class="product-card">
         <h3 th:text="${produto.name}">Nome do disco</h3>
@@ -24,11 +11,10 @@
             Preço: R$
             <span th:text="${#numbers.formatDecimal(produto.price, 1, 'POINT', 2, 'COMMA')}">0,00</span>
         </p>
-        <a th:href="@{'/produto/' + ${produto.id}}" class="btn">Ver detalhes</a>
-        <form th:action="@{'/user/lista/add/' + ${produto.name}}" method="post">
+
+        <form th:if="${user.tipo == 'client'}"
+              th:action="@{'/carrinho/adicionar/' + ${produto.name}}" method="post">
             <button type="submit">Adicionar ao carrinho</button>
         </form>
     </div>
 </div>
-</body>
-</html>
