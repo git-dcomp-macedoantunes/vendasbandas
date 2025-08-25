@@ -9,10 +9,10 @@
 <header>
     <h1>Loja de Discos</h1>
     <nav>
-        <a th:href="@{/}">Home</a>
-        <a th:href="@{/carrinho}">Carrinho</a>
-        <a th:href="@{/login}">Login</a>
-        <a th:href="@{/produto}">Cadastrar Produto</a>
+        <a th:href="@{/}">Home</a>           <!-- GET para index -->
+        <a th:href="@{/carrinho}">Carrinho</a> <!-- GET para carrinho -->
+        <a th:href="@{/login}">Login</a>       <!-- GET para login -->
+        <a th:href="@{/produto}">Cadastrar Produto</a> <!-- GET para form produto -->
     </nav>
 </header>
 
@@ -30,10 +30,19 @@
             Estoque: <span th:text="${p.stock}"></span>
             <p><em th:text="${p.description}"></em></p>
 
-            <form th:action="@{/carrinho/add}" method="post" style="display:inline;">
+            <form th:action="@{/produto}" method="post">
+                <input type="text" name="name" required />
+                <input type="number" name="price" required />
+                <input type="number" name="stock" required />
+                <textarea name="description" required></textarea>
+                <button type="submit">Cadastrar Produto</button>
+            </form>
+
+            <form th:action="@{/carrinho/add}" method="post">
                 <input type="hidden" name="nomeProduto" th:value="${p.name}" />
                 <button type="submit">Adicionar ao carrinho</button>
             </form>
+
         </li>
     </ul>
 </div>
