@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <title>Carrinho de Compras</title>
@@ -9,9 +9,9 @@
 <header>
     <h1>Loja de Discos</h1>
     <nav>
-        <a href="/">Home</a>
-        <a href="/user/lista">Carrinho</a>
-        <a href="/user/login">Login</a>
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/carrinho}">Carrinho</a>
+        <a th:href="@{/login}">Login</a>
     </nav>
 </header>
 
@@ -23,8 +23,8 @@
             <span th:text="${item.name}">Nome</span> -
             R$ <span th:text="${#numbers.formatDecimal(item.price, 1, 'POINT', 2, 'COMMA')}">0,00</span>
 
-            <!-- Botão de remover do carrinho -->
-            <form th:action="@{'/user/lista/remover/' + ${item.name}}" method="post" style="display:inline;">
+            <form th:action="@{/carrinho/remove}" method="post" style="display:inline;">
+                <input type="hidden" name="nomeProduto" th:value="${item.name}" />
                 <button type="submit">Remover</button>
             </form>
         </li>
@@ -33,11 +33,7 @@
     <p class="total">Total: R$
         <span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')}">0,00</span>
     </p>
-
-    <div style="margin-top:20px;">
-        <a href="/" class="btn">Continuar comprando</a>
-        <a href="/checkout" class="btn">Finalizar compra</a>
-    </div>
 </div>
 </body>
 </html>
+

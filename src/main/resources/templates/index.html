@@ -1,20 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Loja de Discos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1>Loja de Discos</h1>
+    <nav>
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/carrinho}">Carrinho</a>
+        <a th:href="@{/login}">Login</a>
+        <a th:href="@{/produto}">Cadastrar Produto</a>
+    </nav>
+</header>
+
 <div class="container">
-    <h2>Discos disponíveis</h2>
+    <h2>Produtos Disponíveis</h2>
 
-    <div th:if="${user.tipo == 'seller'}">
-        <a href="/novo-produto" class="btn">Adicionar Produto</a>
+    <div th:if="${#lists.isEmpty(produtos)}">
+        Nenhum produto cadastrado.
     </div>
 
-    <div th:each="produto : ${produtos}" class="product-card">
-        <h3 th:text="${produto.name}">Nome do disco</h3>
-        <p>
-            Preço: R$
-            <span th:text="${#numbers.formatDecimal(produto.price, 1, 'POINT', 2, 'COMMA')}">0,00</span>
-        </p>
+    <ul>
+        <li th:each="p : ${produtos}">
+            <strong th:text="${p.name}"></strong> -
+            R$ <span th:text="${#numbers.formatDecimal(p.price, 1, 'POINT', 2, 'COMMA')}">0,00</span> -
+            Estoque: <span th:text="${p.stock}"></span>
+            <p><em th:text="${p.description}"></em></p>
 
-        <form th:if="${user.tipo == 'client'}"
-              th:action="@{'/carrinho/adicionar/' + ${produto.name}}" method="post">
-            <button type="submit">Adicionar ao carrinho</button>
-        </form>
-    </div>
+            <form th:action="@{/carrinho/add}" method="post" style="display:inline;">
+                <input type="hidden" name="nomeProduto" th:value="${p.name}" />
+                <button type="submit">Adicionar ao carrinho</button>
+            </form>
+        </li>
+    </ul>
 </div>
+</body>
+</html>
