@@ -23,7 +23,7 @@
             <span th:text="${item.name}">Nome</span> -
             R$ <span th:text="${#numbers.formatDecimal(item.price, 1, 'POINT', 2, 'COMMA')}">0,00</span>
 
-            <form th:action="@{/carrinho/remove}" method="post" style="display:inline;">
+            <form th:action="@{/user/carrinho/remove}" method="post" style="display:inline;">
                 <input type="hidden" name="nomeProduto" th:value="${item.name}" />
                 <button type="submit">Remover</button>
             </form>

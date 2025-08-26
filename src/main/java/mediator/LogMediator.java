@@ -6,12 +6,14 @@ package mediator;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
 
 import model.ProductModel;
 import model.UserModel;
 import model.UserSellerModel;
 import service.DataService;
-import org.springframework.stereotype.Component;
 
 //classe usada para "Logar", logar produtos e contas.
 //ou seja, qunado se cria uma conta ou produto, ela cria e fala pra outra salvar num arquivo
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Component;
 public class LogMediator implements Mediator{
     //é final porq não é pra mudar o endereço dele.
     private final DataService data;
+    private static UserModel user;
     
     public LogMediator() {
         this.data = new DataService(this);
@@ -30,10 +33,26 @@ public class LogMediator implements Mediator{
     //loga o usuário, dependendo de "mode" ele registra um tipo de usuário diferente
     //esse "mode" deve ser dado pelo controller.
     @Override
-    public void logUser(String type, String username, String password) throws IllegalArgumentException, IOException{
-        data.logUser(type, username, password);
+    public UserModel logUser(String type, String username, String password) throws IllegalArgumentException, IOException{
+        return data.logUser(type, username, password);
     }
 
+    //seta o usuario principal pra ser usado em todas as intancias de logmediator
+    public void setUserPrincipal(UserModel userPrincipal){
+        user = userPrincipal;
+    }
+    public UserModel getUserPrincipal(){
+        return user;
+    }
+    //pega o total do carrinho do usuario
+    public double getTotal(UserModel user){
+        double total = 0;
+        ArrayList<ProductModel> list = user.getProductList();
+        for(int i = 0; i < list.size(); i++){
+            total += list.get(i).getPrice();
+        }
+        return total;
+    }
     //cria um produto, e cadastra ele no arquivo
     @Override
     public void logProduct(String name, double price, UserModel owner, String description, int stock) throws IllegalArgumentException, NullPointerException, IOException{
@@ -67,7 +86,7 @@ public class LogMediator implements Mediator{
 
     @Override 
     public ProductModel findProductByName(String product){
-        ArrayList<ProductModel> list = data.getProducts();
+        List<ProductModel> list = data.getProducts();
         for(int i = 0; i < list.size() ; i++){
             if(list.get(i).getName().equals(product))
             return list.get(i);

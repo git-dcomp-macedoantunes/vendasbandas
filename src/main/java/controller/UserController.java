@@ -2,18 +2,26 @@ package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import mediator.LogMediator;
 import model.ProductModel;
 import model.UserClientModel;
 import model.UserModel;
 import model.UserSellerModel;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
 
+    
     private final LogMediator service;
     private UserModel userPrincipal;
 
@@ -24,22 +32,32 @@ public class UserController {
 
     @PostMapping("/login")
     public String logarOuCadastrarUsuario(@RequestParam String username,
-                                          @RequestParam String password) {
+                                          @RequestParam String password,
+                                          @RequestParam String type) {
         if (service.getDataService().getUsers().containsKey(username)) {
             // Usuário existe
             if (service.getDataService().getUsers().get(username).getPassword().equals(password)) {
                 userPrincipal = service.getDataService().getUsers().get(username);
+                userPrincipal.setMediator(service);
+                System.out.println("Usuário logado: " + username);
+                service.setUserPrincipal(userPrincipal);
                 return "redirect:/";
             } else {
                 System.out.println("Senha incorreta");
                 return "login";
             }
         } else {
-            // Usuário não existe
-            UserSellerModel novoUsuario = new UserSellerModel(username, password);
-            service.getDataService().getUsers().put(username, novoUsuario);
-            userPrincipal = novoUsuario;
-            System.out.println("Usuário criado e logado: " + username);
+            // Usuário não existe, cria novo usuário do tipo cliente
+            // adicionar checkbox para escolher tipo de usuario
+            // loga usuario no lugar ai
+            try{
+            userPrincipal = service.logUser(type, username, password);
+            } catch (IllegalArgumentException | IOException e){
+                System.out.println(e.getMessage());
+            }
+            System.out.println("Usuário criado: " + username);
+            userPrincipal.setMediator(service);
+            service.setUserPrincipal(userPrincipal);
             return "redirect:/"; // redireciona para home
         }
     }
@@ -58,10 +76,17 @@ public class UserController {
     }
 
     // Adiciona no carrinho
-    @PostMapping("/lista/{userPrincipal}/add{product}")
-    public String addProductToCarrinho(@PathVariable String product){
+    @PostMapping("/addProduct")
+    public String addProductToCarrinho(@RequestParam(name = "nomeProduto") String product){
+        if (userPrincipal instanceof UserSellerModel){
+            System.out.println("Vendedores não podem comprar produtos.");
+            return "redirect:/";
+        }
         try {
             service.addProductToList(userPrincipal, product);
+            service.getDataService().saveToFile();
+            service.getDataService().readFromFiles();
+            System.out.println("Produto adicionado ao carrinho: " + product);
         } catch (IOException ex) {
             System.getLogger(UserController.class.getName())
                     .log(System.Logger.Level.ERROR, (String) null, ex);
@@ -69,19 +94,24 @@ public class UserController {
             System.out.println("Usuario não está logado");
             return "/login";
         }
-        return "redirect:/lista/{userPrincipal}";
+        return "redirect:/";
     }
 
     // Deleta um produto especifico
-    @DeleteMapping("/product/{userPrincipal}/delete_{name}_da_lista")
-    public String deleteProduct(@PathVariable String name){
+    @PostMapping("/carrinho/remove")
+    public String deleteProduct(@RequestParam(name = "nomeProduto") String product){
         try {
-            service.getProductList(userPrincipal).remove(service.findProductByName(name));
+            service.findProductByName(product).setStock(service.findProductByName(product).getStock() + 1);
+            service.getProductList(userPrincipal).remove(service.findProductByName(product));
+            service.getDataService().saveToFile();
         } catch (NullPointerException e){
             System.out.println("Usuario não está logado");
             return "/login";
+        } catch (IOException ex) {
+            System.getLogger(UserController.class.getName())
+                    .log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        return "redirect:/product/{userPrincipal}";
+        return "redirect:/carrinho";
     }
 
     // Deleta usuario logado
@@ -110,6 +140,7 @@ public class UserController {
             try {
                 // Cria e adiciona produto
                 service.logProduct(name, price, userPrincipal, description, stock);
+                System.out.println(userPrincipal.getUsername());
             } catch (IllegalArgumentException | NullPointerException e) {
                 System.out.println(e.getMessage());
             } catch (IOException ex) {

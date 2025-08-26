@@ -4,19 +4,19 @@
  */
 package service;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import model.ProductModel;
-import model.*;
-import mediator.LogMediator;
-import org.junit.jupiter.api.AfterEach;
+
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import mediator.LogMediator;
+import model.UserModel;
+import model.UserSellerModel;
 
 /**
  *
@@ -48,9 +48,9 @@ public class DataServiceTest {
     
     @AfterEach
     public void tearDown() throws IOException {
-        instance.getUsers().clear();
-        instance.getProducts().clear();
-        instance.saveToFile();
+        //instance.getUsers().clear();
+        //instance.getProducts().clear();
+        //instance.saveToFile();
     }
 
     /**

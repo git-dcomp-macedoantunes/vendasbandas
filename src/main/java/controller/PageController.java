@@ -1,9 +1,12 @@
 package controller;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import java.util.ArrayList;
+
+import mediator.LogMediator;
 
 @Controller
 public class PageController {
@@ -12,26 +15,31 @@ public class PageController {
     private ArrayList<String> produtos = new ArrayList<>();
     // Carrinho do usuário (simples)
     private ArrayList<String> carrinho = new ArrayList<>();
+    private final LogMediator service = new LogMediator();
 
     // Página inicial mostrando produtos
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("produtos", produtos);
+        model.addAttribute("produtos", service.getDataService().getProducts());
+        try {
+            service.getDataService().readFromFiles();
+        } catch (Exception e) {
+            System.out.println("Erro ao ler arquivos: " + e.getMessage());
+        }
         return "index"; // retorna index.html
     }
 
     // Página de login
     @GetMapping("/login")
-    public String login() {
+    public String login(Model model) {
         return "login"; // retorna login.html
     }
 
     // Página do carrinho
     @GetMapping("/carrinho")
     public String carrinho(Model model) {
-        double total = 0; // apenas placeholder
-        model.addAttribute("itens", carrinho);
-        model.addAttribute("total", total);
+        model.addAttribute("itens", service.getUserPrincipal().getProductList());
+        model.addAttribute("total", service.getTotal(service.getUserPrincipal()));
         return "carrinho"; // retorna carrinho.html
     }
 

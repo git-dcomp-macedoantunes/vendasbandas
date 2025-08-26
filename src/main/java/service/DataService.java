@@ -31,7 +31,7 @@ public final class DataService {
     private final Path FILEPATHPRODUCTS = Path.of("products.json");
     private final Path FILEPATHUSERS = Path.of("users.json");
     private static final HashMap<String, UserModel> users = new HashMap<>();
-    private static final ArrayList<ProductModel> products = new ArrayList<>();
+    private static final List<ProductModel> products = new ArrayList<>();
 
     private LogMediator mediator;
 
@@ -142,7 +142,7 @@ public final class DataService {
     }
     
     //cria usuario, coloca no hash e salva no arquivo
-    public void logUser(String type, String username, String password) throws IllegalArgumentException, IOException {
+    public UserModel logUser(String type, String username, String password) throws IllegalArgumentException, IOException {
         UserModel user;
         try {
             if (getUsers().get(username) != null){ //caso haja colisão
@@ -152,6 +152,7 @@ public final class DataService {
                 user.setMediator(mediator);
                 getUsers().put(username, user);
                 saveToFile();
+                return user;
             }
         } 
         catch (IllegalArgumentException | IOException e) {
@@ -175,7 +176,7 @@ public final class DataService {
     public HashMap<String, UserModel> getUsers(){
         return users;
     }
-    public ArrayList<ProductModel> getProducts(){
+    public List<ProductModel> getProducts(){
         return products;
     }
 }

@@ -1,1 +1,26 @@
-[]
+[
+    {
+        "password": "userseller",
+        "type": "seller",
+        "username": "userseller",
+        "products": []
+    },
+    {
+        "password": "password1",
+        "type": "seller",
+        "username": "username02",
+        "products": []
+    },
+    {
+        "password": "userclient",
+        "type": "client",
+        "username": "userclient",
+        "products": []
+    },
+    {
+        "password": "password",
+        "type": "seller",
+        "username": "username",
+        "products": []
+    }
+]

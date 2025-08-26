@@ -1,12 +1,16 @@
 package controller;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import mediator.LogMediator;
 import model.ProductModel;
-import model.UserSellerModel;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.ui.Model;
 
 
 @Controller
@@ -22,7 +26,7 @@ public class ProductController {
     // Pag principal de produtos - retorna lista de produtos
     @GetMapping("/products") // em vez de apenas @GetMapping
     @ResponseBody // se for retornar JSON, ou Model se for Thymeleaf
-    public ArrayList<ProductModel> getAllProducts() {
+    public List<ProductModel> getAllProducts() {
         return service.getDataService().getProducts();
     }
 

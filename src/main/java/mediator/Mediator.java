@@ -12,7 +12,7 @@ import model.UserModel;
 import service.DataService;
 public interface Mediator {
     //logue usuarios
-    public void logUser(String type, String username, String password) throws IllegalArgumentException, IOException;
+    public UserModel logUser(String type, String username, String password) throws IllegalArgumentException, IOException;
     //logue produtos
     public void logProduct(String name, double price, UserModel owner, String description, int stock) throws IllegalArgumentException, NullPointerException, IOException;
     //faça usuario user ser dono de produto product
