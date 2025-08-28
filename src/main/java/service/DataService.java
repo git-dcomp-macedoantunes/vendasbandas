@@ -133,6 +133,7 @@ public final class DataService {
                 JSONObject pObj = new JSONObject();
                 pObj.put("name", product.getName());
                 userProducts.put(pObj);
+                System.out.println("Operacao realizada" + pObj);
             }
             obj.put("products", userProducts);
             jsonArrayUsers.put(obj);

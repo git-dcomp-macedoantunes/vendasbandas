@@ -3,24 +3,6 @@
         "price": 5,
         "name": "Test Product5",
         "description": "Test Description",
-        "stock": 91
-    },
-    {
-        "price": 5,
-        "name": "producttest",
-        "description": "description",
-        "stock": 103
-    },
-    {
-        "price": 5,
-        "name": "producttest2",
-        "description": "description",
-        "stock": 93
-    },
-    {
-        "price": 5,
-        "name": "Test Product5",
-        "description": "Test Description",
-        "stock": 0
+        "stock": 86
     }
 ]

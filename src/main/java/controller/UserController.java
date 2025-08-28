@@ -86,7 +86,6 @@ public class UserController {
         try {
             service.addProductToList(userPrincipal, product);
             service.getDataService().saveToFile();
-            service.getDataService().readFromFiles();
             System.out.println("Produto adicionado ao carrinho: " + product);
         } catch (IOException ex) {
             System.getLogger(UserController.class.getName())
@@ -104,7 +103,7 @@ public class UserController {
         try {
             // Pega a lista de produtos do usuário
             List<ProductModel> produtos = service.getProductList(userPrincipal);
-
+            System.out.println("Lista antes:" + service.getProductList(userPrincipal));
             boolean removed = false;
 
             for (int i = 0; i < produtos.size(); i++) {
@@ -123,6 +122,7 @@ public class UserController {
 
             if (removed) {
                 System.out.println("Produto removido do carrinho: " + product);
+                System.out.println("Lista depois:" + service.getProductList(userPrincipal));
             } else {
                 System.out.println("Produto não encontrado na lista do usuário: " + product);
             }
