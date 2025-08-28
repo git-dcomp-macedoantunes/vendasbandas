@@ -3,9 +3,11 @@ import java.util.ArrayList;
 
 public class UserClientModel extends UserModel {
 
-    private ArrayList<ProductModel> shoppingCart = new ArrayList<>();
+    private ArrayList<ProductModel> shoppingCart;
     public UserClientModel (String username, String password) throws IllegalArgumentException {
         super(username, password);
+        this.shoppingCart = new ArrayList<>();
+        this.shoppingCart = new ArrayList<>();
     }
 
     //Compra os itens do carrinho: remove eles do carrinho e retorna o preço.
@@ -38,6 +40,6 @@ public class UserClientModel extends UserModel {
 
     @Override
     public ArrayList<ProductModel> getProductList(){
-        return shoppingCart;
+        return this.shoppingCart;
     }
 }

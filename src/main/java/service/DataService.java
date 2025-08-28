@@ -6,12 +6,10 @@
 package service;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -127,7 +125,8 @@ public final class DataService {
             obj.put("type", type);
 
             JSONArray userProducts = new JSONArray();
-            ArrayList<ProductModel> list = mediator.getProductList(user); //chama o método que retorna a lista de produtos de um usuário
+            ArrayList<ProductModel> list = mediator.getProductList(user);
+            System.out.println(list); //chama o método que retorna a lista de produtos de um usuário
             for (int k = 0; k < list.size(); k++) {
                 ProductModel product = list.get(k);
                 JSONObject pObj = new JSONObject();

@@ -4,5 +4,17 @@
         "name": "Test Product5",
         "description": "Test Description",
         "stock": 86
+    },
+    {
+        "price": 5,
+        "name": "producttest",
+        "description": "producttest",
+        "stock": 3
+    },
+    {
+        "price": 5,
+        "name": "userseller",
+        "description": "userseller",
+        "stock": 5
     }
 ]
