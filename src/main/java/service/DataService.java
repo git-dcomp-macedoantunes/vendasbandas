@@ -6,6 +6,7 @@
 package service;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public final class DataService {
     private final Path FILEPATHPRODUCTS = Path.of("products.json");
     private final Path FILEPATHUSERS = Path.of("users.json");
     private static final HashMap<String, UserModel> users = new HashMap<>();
-    private static final List<ProductModel> products = new ArrayList<>();
+    private static final ArrayList<ProductModel> products = new ArrayList<>();
 
     private LogMediator mediator;
 
@@ -126,7 +127,7 @@ public final class DataService {
             obj.put("type", type);
 
             JSONArray userProducts = new JSONArray();
-            List<ProductModel> list = mediator.getProductList(user); //chama o método que retorna a lista de produtos de um usuário
+            ArrayList<ProductModel> list = mediator.getProductList(user); //chama o método que retorna a lista de produtos de um usuário
             for (int k = 0; k < list.size(); k++) {
                 ProductModel product = list.get(k);
                 JSONObject pObj = new JSONObject();
@@ -176,7 +177,7 @@ public final class DataService {
     public HashMap<String, UserModel> getUsers(){
         return users;
     }
-    public List<ProductModel> getProducts(){
+    public ArrayList<ProductModel> getProducts(){
         return products;
     }
 }

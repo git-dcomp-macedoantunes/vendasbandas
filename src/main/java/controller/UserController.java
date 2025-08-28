@@ -2,6 +2,7 @@ package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -99,20 +100,46 @@ public class UserController {
 
     // Deleta um produto especifico
     @PostMapping("/carrinho/remove")
-    public String deleteProduct(@RequestParam(name = "nomeProduto") String product){
+    public String deleteProduct(@RequestParam(name = "nomeProduto") String product) {
         try {
-            service.findProductByName(product).setStock(service.findProductByName(product).getStock() + 1);
-            service.getProductList(userPrincipal).remove(service.findProductByName(product));
+            // Pega a lista de produtos do usuário
+            List<ProductModel> produtos = service.getProductList(userPrincipal);
+
+            boolean removed = false;
+
+            for (int i = 0; i < produtos.size(); i++) {
+                if (produtos.get(i).getName().equals(product)) {
+                    produtos.remove(i);
+
+                    ProductModel catalogProduct = service.findProductByName(product);
+                    if (catalogProduct != null) {
+                        catalogProduct.setStock(catalogProduct.getStock() + 1);
+                    }
+
+                    removed = true;
+                    break;
+                }
+            }
+
+            if (removed) {
+                System.out.println("Produto removido do carrinho: " + product);
+            } else {
+                System.out.println("Produto não encontrado na lista do usuário: " + product);
+            }
+
+            // Salva alterações no arquivo
             service.getDataService().saveToFile();
-        } catch (NullPointerException e){
-            System.out.println("Usuario não está logado");
+
+        } catch (NullPointerException e) {
+            System.out.println("Usuário não está logado");
             return "/login";
         } catch (IOException ex) {
             System.getLogger(UserController.class.getName())
-                    .log(System.Logger.Level.ERROR, (String) null, ex);
-        }
+                    .log(System.Logger.Level.ERROR, (String) null, ex); }
+
         return "redirect:/carrinho";
     }
+
 
     // Deleta usuario logado
     @DeleteMapping("/product/deleteUser")
@@ -140,6 +167,7 @@ public class UserController {
             try {
                 // Cria e adiciona produto
                 service.logProduct(name, price, userPrincipal, description, stock);
+                service.getDataService().saveToFile();
                 System.out.println(userPrincipal.getUsername());
             } catch (IllegalArgumentException | NullPointerException e) {
                 System.out.println(e.getMessage());

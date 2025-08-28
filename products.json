@@ -3,13 +3,13 @@
         "price": 5,
         "name": "Test Product5",
         "description": "Test Description",
-        "stock": 99
+        "stock": 91
     },
     {
         "price": 5,
         "name": "producttest",
         "description": "description",
-        "stock": 105
+        "stock": 103
     },
     {
         "price": 5,
