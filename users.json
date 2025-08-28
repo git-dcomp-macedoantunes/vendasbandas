@@ -9,6 +9,6 @@
         "password": "userclient",
         "type": "client",
         "username": "userclient",
-        "products": [{"name": "producttest"}]
+        "products": [{name:"Test Product5"}]
     }
 ]
